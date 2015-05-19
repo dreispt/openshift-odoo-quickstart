@@ -1,0 +1,18 @@
+#!/bin/bash
+
+ODOO_GITUSER=odoo
+ODOO_GITREPO=odoo
+ODOO_VERSION=8.0
+ODOO_URL=https://github.com/${ODOO_GITUSER}/${ODOO_GITREPO}.git
+ODOO_ADMIN_PASSWD=$(python -c "import uuid; print uuid.uuid4()")
+echo "Admin password: $ODOO_ADMIN_PASSWD"
+export ODOO_ADMIN_PASSWD
+
+cd $OPENSHIFT_DATA_DIR/
+
+if [ -d "odoo-repo" ]; then
+    echo "Odoo already installed"
+else
+    echo "Downloading Odoo."
+    git clone $ODOO_URL -b $ODOO_VERSION --depth=1 odoo-repo
+fi
