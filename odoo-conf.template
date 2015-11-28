@@ -1,13 +1,15 @@
 [options]
-# addons_path =  # Dynamically set
-admin_passwd = 987654321
+admin_passwd = $ADMIN_PASSWD
+addons_path = $DATA_DIR/odoo/addons,$REPO_DIR/addons
+logfile = $LOG_PATH
+data_dir = $DATA_DIR
+db_name = $APP_NAME
+db_host = $DB_HOST
+db_user = $DB_USERNAME
+db_password = $DB_PASSWORD
+db_port = $DB_PORT
+
 csv_internal_sep = ,
-# data_dir = # Dynamically set
-# db_host =  # Dynamically set
-# db_name =  # Dynamically set
-# db_user =  # Dynamically set
-# db_password =  # Dynamically set
-db_port = False
 db_maxconn = 64
 db_template = template1
 dbfilter = .*
@@ -17,14 +19,13 @@ email_from = False
 import_partial =
 limit_memory_hard = 2684354560
 limit_memory_soft = 2147483648
-limit_request = 8192
+limit_request = 8193
 limit_time_cpu = 60
 limit_time_real = 120
 list_db = True
 log_db = False
 log_handler = [':INFO']
 log_level = info
-# logfile =  # Dynamically set
 logrotate = False
 longpolling_port = 8072
 max_cron_threads = 1
@@ -58,4 +59,3 @@ xmlrpc = True
 xmlrpcs = False
 xmlrpcs_interface =
 xmlrpcs_port = 8070
-

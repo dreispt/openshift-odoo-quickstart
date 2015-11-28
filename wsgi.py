@@ -40,17 +40,24 @@ import uuid
 openerp.multi_process = True # Nah!
 
 # Equivalent of --load command-line option
-openerp.conf.server_wide_modules = ['web']
 conf = openerp.tools.config
+openerp.conf.server_wide_modules = ['web']
 
-conf['conf'] = os.path.join(os.environ['OPENSHIFT_REPO_DIR'], 'odoo.conf')
-conf['addons_path'] = os.path.join(datadir, 'odoo-repo/addons')
-conf['log_file'] = os.path.join(os.environ['OPENSHIFT_LOG_DIR'], 'odoo.log')
+# NEW CONF
+conf['conf'] = os.path.join(os.environ['OPENSHIFT_DATA_DIR'], 'odoo.conf')
+
+# OLD CONF
+#conf['conf'] = os.path.join(os.environ['OPENSHIFT_REPO_DIR'], 'odoo.conf')
+repodir = os.environ['OPENSHIFT_REPO_DIR']
+addons_list= [
+    os.path.join(datadir, 'odoo-repo', 'addons'),
+    os.path.join(repodir, 'addons')]
+conf['addons_path'] = ','.join(addons_list)
+#conf['log_file'] = os.path.join(os.environ['OPENSHIFT_LOG_DIR'], 'odoo.log')
 conf['data_dir'] = datadir
-conf['admin_passwd'] = os.environ.get('ODOO_ADMIN_PASSWD')
-
+#conf['admin_passwd'] = os.environ.get('ODOO_ADMIN_PASSWD')
 # Database config
-conf['db_name'] = os.environ['OPENSHIFT_APP_NAME']
+#conf['db_name'] = os.environ['OPENSHIFT_APP_NAME']
 conf['db_host'] = os.environ['OPENSHIFT_POSTGRESQL_DB_HOST']
 conf['db_user'] = os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME']
 conf['db_port'] = int(os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'])
@@ -64,7 +71,6 @@ openerp.service.server.load_server_wide_modules()
 
 server = openerp.service.server.ThreadedServer(application)
 server.cron_spawn()
-
 
 #----------------------------------------------------------
 # Gunicorn

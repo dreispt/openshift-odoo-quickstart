@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+import os
+from string import Template
+import uuid
+
+datadir = os.environ['OPENSHIFT_DATA_DIR']
+repodir = os.environ['OPENSHIFT_REPO_DIR']
+
+t = Template(open(os.path.join(repodir, 'odoo-conf.template')).read())
+data = {
+    'DATA_DIR': datadir,
+    'REPO_DIR': repodir,
+    'ADMIN_PASSWD': uuid.uuid4(),
+    'LOG_DIR': os.environ['OPENSHIFT_LOG_DIR'],
+    'LOG_PATH': os.path.join(os.environ['OPENSHIFT_LOG_DIR'], 'odoo.log'),
+    'APP_NAME': os.environ['OPENSHIFT_APP_NAME'],
+    'DB_HOST': os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
+    'DB_PORT': os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
+    'DB_USERNAME': os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
+    'DB_PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD']}
+
+print "==== Conf data ===="
+from pprint import pprint
+pprint(data)
+
+res = t.substitute(data)
+open(os.path.join(datadir, 'odoo.conf'), 'w').write(res)
+print "Conf file written to %s" % datadir
