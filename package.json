@@ -1,0 +1,5 @@
+{ "dependencies" :
+    { "less" : "latest"
+    , "less-plugin-clean-css" : "latest"
+    }
+}

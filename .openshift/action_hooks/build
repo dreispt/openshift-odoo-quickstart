@@ -1,9 +1,21 @@
 #!/bin/bash
 
-ODOO_GITUSER=odoo
-ODOO_GITREPO=odoo
+if [ -f "~/python/virtenv/bin/wkhtmltopdf" ]; then
+  echo "wkhtmltopdf already installed."
+else
+  cd /tmp
+  wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-centos6-amd64.rpm
+  rpm2cpio wkhtmltox-0.12.1_linux-centos6-amd64.rpm | cpio -idvm
+  cp /tmp/usr/local/bin/wkhtmltopdf ~/python/virtenv/bin/
+  cp /tmp/usr/local/lib/* ~/python/virtenv/bin/
+  rm -rf /tmp/usr
+fi
+
+ODOO_GITUSER=OCA
+ODOO_GITREPO=OCB
 ODOO_VERSION=8.0
-ODOO_URL=https://github.com/${ODOO_GITUSER}/${ODOO_GITREPO}.git
+ODOO_URL=https://github.com/${ODOO_GITUSER}/${ODOO_GITREPO}/tarball/${ODOO_VERSION}
+https://github.com/${ODOO_GITUSER}/${ODOO_GITREPO}.git
 ODOO_ADMIN_PASSWD=$(python -c "import uuid; print uuid.uuid4()")
 echo "Admin password: $ODOO_ADMIN_PASSWD"
 export ODOO_ADMIN_PASSWD
@@ -14,5 +26,10 @@ if [ -d "odoo-repo" ]; then
     echo "Odoo already installed"
 else
     echo "Downloading Odoo."
-    git clone $ODOO_URL -b $ODOO_VERSION --depth=1 odoo-repo
+    wget https://github.com/OCA/OCB/tarball/9.0 -O /tmp/odoo.tar.gz
+    tar -zxvf /tmp/odoo.tar.gz -C ~/app-root/data
+    ln -s ~/${ODOO_GITUSER}-${ODOO_GITREPO}* ~/app-root/data/odoo-repo
+    rm ~/${ODOO_GITUSER}-${ODOO_GITREPO}*
+    rm -r ~/app-root/data/odoo-repo/doc
+    rm -r ~/app-root/data/odoo-repo/setup
 fi
